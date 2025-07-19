@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: movie-recommendation-backend
+    env: node
+    runtime: node18  # Specify Node.js version
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: MONGODB_URI
+        value: mongodb+srv://username:encodedPassword@cluster0.abc123.mongodb.net/movie-app?retryWrites=true&w=majority
+      - key: JWT_SECRET
+        value: your_64_char_hex_secret_here
+      - key: 2b40951bf9cbc7fc6eb52577b11955d9
+        value: 2b40951bf9cbc7fc6eb52577b11955d9
+      - key: PORT
+        value: 10000  # Render automatically assigns $PORT
