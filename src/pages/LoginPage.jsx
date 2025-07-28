@@ -23,7 +23,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await login(values);
+      const response = await login(values.email, values.password); 
       authLogin(response.data.token);
       navigate('/');
     } catch (err) {
@@ -32,6 +32,7 @@ const LoginPage = () => {
       setSubmitting(false);
     }
   };
+
 
   return (
     <Container maxWidth="sm">

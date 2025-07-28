@@ -1,56 +1,62 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { TextField, Button, Container, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { register } from '../api/auth';
+import { TextField, Button, Container, Typography, Box } from '@mui/material';
 
 const RegisterPage = () => {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Register data:', formData);
-    // Add your registration logic here
+    console.log('📤 Form data:', formData);
+
+    try {
+      const response = await register(formData);
+      localStorage.setItem('token', response.data.token);
+      navigate('/');
+    } catch (err) {
+      const message = err.response?.data?.errors?.[0]?.msg || 'Registration failed';
+      console.error('❌ Error:', message);
+      setError(message);
+    }
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Register
-      </Typography>
-      <form onSubmit={handleSubmit}>
+    <Container maxWidth="sm">
+      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
         <TextField
-          label="Username"
           fullWidth
+          label="Username"
           margin="normal"
           value={formData.username}
-          onChange={(e) => setFormData({...formData, username: e.target.value})}
+          onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+          required
         />
         <TextField
+          fullWidth
           label="Email"
           type="email"
-          fullWidth
           margin="normal"
           value={formData.email}
-          onChange={(e) => setFormData({...formData, email: e.target.value})}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          required
         />
         <TextField
+          fullWidth
           label="Password"
           type="password"
-          fullWidth
           margin="normal"
           value={formData.password}
-          onChange={(e) => setFormData({...formData, password: e.target.value})}
+          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+          required
         />
+        {error && <Typography color="error">{error}</Typography>}
         <Button type="submit" variant="contained" sx={{ mt: 2 }}>
           Register
         </Button>
-      </form>
-      <Typography sx={{ mt: 2 }}>
-        Already have an account? <Link to="/login">Login here</Link>
-      </Typography>
+      </Box>
     </Container>
   );
 };

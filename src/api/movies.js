@@ -1,7 +1,16 @@
-import api from './auth';
+import { tmdbApi } from './tmdb';
 
-export const getPopularMovies = () => api.get('/movies/popular');
-export const searchMovies = (query) => api.get('/movies/search', { params: { query } });
-export const getMovieDetails = (id) => api.get(`/movies/${id}`);
-export const addFavorite = (movieId) => api.post('/movies/favorites', { movieId });
-export const getMovieTrailers = (id) => api.get(`/movies/${id}/videos`);
+export const getPopularMovies = () =>
+  tmdbApi.get('/movie/popular'); // 
+
+export const searchMovies = (query) =>
+  tmdbApi.get('/search/movie', { params: { query, language: 'en-US', page: 1 } }); 
+
+export const getMovieDetails = (id) =>
+  tmdbApi.get(`/movie/${id}`, { params: { language: 'en-US' } }); 
+
+export const getMovieTrailers = (id) =>
+  tmdbApi.get(`/movie/${id}/videos`, { params: { language: 'en-US' } }); 
+
+export const addFavorite = (movieId) =>
+  tmdbApi.post('/movies/favorites', { movieId }); 

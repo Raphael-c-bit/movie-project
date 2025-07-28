@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getPopularMovies, searchMovies } from '../api/movies';
+import { getPopularMovies, searchMovies } from '../api/tmdb';
 import { Grid, Container, Typography } from '@mui/material';
 import { MovieCard, SearchBar } from '../components';
 
@@ -11,14 +11,15 @@ const HomePage = () => {
     const fetchMovies = async () => {
       try {
         const response = await getPopularMovies();
-        setMovies(response.data);
+        setMovies(response.data.results);
+        console.log(response.data);
       } catch (err) {
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchMovies();
   }, []);
 
@@ -26,14 +27,13 @@ const HomePage = () => {
     try {
       setLoading(true);
       const response = await searchMovies(query);
-      setMovies(response.data);
+      setMovies(response.data.results);
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
   };
-
   if (loading) {
     return <Typography>Loading...</Typography>;
   }
